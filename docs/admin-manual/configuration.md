@@ -305,6 +305,7 @@ liquidsoap:
     # return the modified s handle.
     before_outputs: []
 ```
+
 An example file `/var/lib/libretime/before_output/stereotool.liq.j2` could look like this:
 
 ```liquidsoap
