@@ -309,10 +309,10 @@ liquidsoap:
 An example file `/var/lib/libretime/before_output/stereotool.liq.j2` could look like this:
 
 ```liquidsoap
-s = buffer(pipe(replay_delay=1.0, process='~/stereo_tool_cmd_64 - - -s ~/stereo-tool-config.sts -q -w 8000 -W 192.168.100.0/23', s))
+s = ladspa.stereotool(s)
 ```
 
-Note that the default directory for LADSPA plugins on Debian type distros is `/usr/lib/ladspa`, so you might need to adjust the path to `stereo_tool_cmd_64` and `stereo-tool-config.sts` accordingly.
+Note that the default directory for LADSPA plugins on Debian type distros is `/usr/lib/ladspa`, so you need to put `stereotool_ladspa.so` there. This particular plugin expects a settings.sts file for configuration in the same directory.
 
 ## Stream
 
