@@ -156,6 +156,7 @@ RUN set -eux \
     gcc \
     libc6-dev \
     libpq-dev \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /src
