@@ -798,7 +798,9 @@ class ApiController extends Zend_Controller_Action
                         $filePropelOrm = $file->getPropelOrm();
                         $title = urlencode($filePropelOrm->getDbTrackTitle());
                         $artist = urlencode($filePropelOrm->getDbArtistName());
-                        Application_Common_TuneIn::sendMetadataToTunein($title, $artist);
+                        $duration = explode(".",$filePropelOrm->getDbLength());
+                        $file_id = urlencode($filePropelOrm->getDbId());
+                        Application_Common_TuneIn::sendMetadataToTunein($title, $artist, $file_id, urlencode($duration[0]));
                     }
                 }
             } else {
@@ -1567,12 +1569,13 @@ class ApiController extends Zend_Controller_Action
         }
 
         $lastTuneInMetadataUpdate = Application_Model_Preference::geLastTuneinMetadataUpdate();
-        if (time() - $lastTuneInMetadataUpdate >= 240) {
+        if (time() - $lastTuneInMetadataUpdate >= 86400) {
             $metadata = $metadata = Application_Model_Schedule::getCurrentPlayingTrack();
             if (!is_null($metadata)) {
                 Application_Common_TuneIn::sendMetadataToTunein(
                     $metadata['title'],
-                    $metadata['artist']
+                    $metadata['artist'],
+                    0,0
                 );
             }
         }

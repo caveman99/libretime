@@ -17,24 +17,24 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
             'Label',
         ]);
         $enableTunein->addDecorator('Label', ['class' => 'enable-tunein']);
-        $enableTunein->setLabel(_('Push metadata to your station on TuneIn?'));
+        $enableTunein->setLabel(_('Push metadata to Metadata Router?'));
         $enableTunein->setValue(Application_Model_Preference::getTuneinEnabled());
         $this->addElement($enableTunein);
 
         $tuneinStationId = new Zend_Form_Element_Text('tunein_station_id');
-        $tuneinStationId->setLabel(_('Station ID:'));
+        $tuneinStationId->setLabel(_('Input Label:'));
         $tuneinStationId->setValue(Application_Model_Preference::getTuneinStationId());
         $tuneinStationId->setAttrib('class', 'input_text');
         $this->addElement($tuneinStationId);
 
         $tuneinPartnerKey = new Zend_Form_Element_Text('tunein_partner_key');
-        $tuneinPartnerKey->setLabel(_('Partner Key:'));
+        $tuneinPartnerKey->setLabel(_('Secret Key:'));
         $tuneinPartnerKey->setValue(Application_Model_Preference::getTuneinPartnerKey());
         $tuneinPartnerKey->setAttrib('class', 'input_text');
         $this->addElement($tuneinPartnerKey);
 
         $tuneinPartnerId = new Zend_Form_Element_Text('tunein_partner_id');
-        $tuneinPartnerId->setLabel(_('Partner Id:'));
+        $tuneinPartnerId->setLabel(_('Router URL:'));
         $tuneinPartnerId->setValue(Application_Model_Preference::getTuneinPartnerId());
         $tuneinPartnerId->setAttrib('class', 'input_text');
         $this->addElement($tuneinPartnerId);
@@ -50,7 +50,7 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
         // from the station on TuneIn. After that, and if the test request
         // succeeds, we will make another request with the real metadata.
         if ($data['enable_tunein']) {
-            $credentialsQryStr = '?partnerId=' . $data['tunein_partner_id'] . '&partnerKey=' . $data['tunein_partner_key'] . '&id=' . $data['tunein_station_id'];
+            $credentialsQryStr = '?secret=' . $data['tunein_partner_key'] . '&input=' . $data['tunein_station_id'];
             $commercialFlagQryStr = '&commercial=true';
 
             $metadata = Application_Model_Schedule::getCurrentPlayingTrack();
@@ -66,30 +66,31 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
             }
 
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, TUNEIN_API_URL . $qryStr);
+            curl_setopt($ch, CURLOPT_URL, $data['tunein_partner_id'] . $qryStr);
             curl_setopt($ch, CURLOPT_FAILONERROR, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
             $xmlData = curl_exec($ch);
             if (curl_error($ch)) {
-                Logging::error('Failed to reach TuneIn: ' . curl_errno($ch) . ' - ' . curl_error($ch) . ' - ' . curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
+                Logging::error('Failed to reach Router: ' . curl_errno($ch) . ' - ' . curl_error($ch) . ' - ' . curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
                 if (curl_error($ch) == 'The requested URL returned error: 403 Forbidden') {
-                    $this->getElement('enable_tunein')->setErrors([_('Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again.')]);
+                    $this->getElement('enable_tunein')->setErrors([_('Invalid Router Settings. Please ensure your Router settings are correct and try again.')]);
                     $valid = false;
                 }
             }
             curl_close($ch);
 
             if ($valid) {
+/*
                 $xmlObj = new SimpleXMLElement($xmlData);
                 if (!$xmlObj || $xmlObj->head->status != '200') {
                     $this->getElement('enable_tunein')->setErrors([_('Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again.')]);
                     $valid = false;
-                } elseif ($xmlObj->head->status == '200') {
+                } elseif ($xmlObj->head->status == '200') {*/
                     Application_Model_Preference::setLastTuneinMetadataUpdate(time());
                     $valid = true;
-                }
+           //     }
             }
         } else {
             $valid = true;

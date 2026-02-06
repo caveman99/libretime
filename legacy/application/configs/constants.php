@@ -128,7 +128,7 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
 // TuneIn integration
-define('TUNEIN_API_URL', 'https://air.radiotime.com/Playing.ashx');
+define('TUNEIN_API_URL', 'https://md-meta.fivemile.org/input/dynamic');
 
 // Celery
 define('CELERY_PENDING_STATUS', 'PENDING');

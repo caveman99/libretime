@@ -67,6 +67,7 @@ output.icecast(
   user={{ output.source_user | quote }},
   password={{ output.source_password | quote }},
   fallible = true,
+  icy_metadata = "false",
   name={{ (output.name or '') | quote }},
   description={{ (output.description or '') | quote }},
   genre={{ (output.genre or '') | quote }},
