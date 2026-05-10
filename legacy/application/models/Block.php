@@ -1696,7 +1696,7 @@ SQL;
                 if (!is_array($pick) || !isset($pick['id'], $pick['slot'])) {
                     continue;
                 }
-                if (!($pick['slot'] instanceof DateTime)) {
+                if (!$pick['slot'] instanceof DateTime) {
                     continue;
                 }
                 $pickSlotUtc = clone $pick['slot'];
