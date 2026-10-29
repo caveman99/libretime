@@ -8,7 +8,7 @@ class Application_Common_TuneIn
      * Update with all fields (duration enables auto-expiration for type=dynamic)
      * curl "http://localhost:9000/input/dynamic?input=radio-live&songID=123&artist=Artist&title=Song&duration=03:45&secret=supersecret123"
      */
-    public static function sendMetadataToTunein($title, $artist, $file_id, $duration)
+    public static function sendMetadataToTunein($title, $artist, $file_id, $duration): void
     {
         $credQryStr = self::getCredentialsQueryString();
         $metadataQryStr = '&title=' . $title . '&artist=' . $artist . '&duration=' . $duration . '&songID=' . $file_id;
@@ -34,7 +34,7 @@ class Application_Common_TuneIn
 //        }
     }
 
-    private static function getCredentialsQueryString()
+    private static function getCredentialsQueryString(): string
     {
         $tuneInStationID = Application_Model_Preference::getTuneinStationId();
         $tuneInPartnerID = Application_Model_Preference::getTuneinPartnerId();

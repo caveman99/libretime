@@ -95,7 +95,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
     /**
      * The value for the media_item_played field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $media_item_played;
 
@@ -239,7 +239,14 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -274,7 +281,14 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -342,7 +356,14 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -377,7 +398,14 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -409,7 +437,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
     /**
      * Get the [media_item_played] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbMediaItemPlayed()
     {
@@ -707,7 +735,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -878,7 +906,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
             $this->fade_out = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->cue_in = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->cue_out = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->media_item_played = ($row[$startcol + 10] !== null) ? (boolean) $row[$startcol + 10] : null;
+            $this->media_item_played = ($row[$startcol + 10] !== null) ? (bool) $row[$startcol + 10] : null;
             $this->instance_id = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
             $this->playout_status = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
             $this->broadcasted = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
@@ -936,7 +964,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -981,7 +1009,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -1024,7 +1052,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1831,7 +1859,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @return CcSchedule The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcShowInstances(CcShowInstances $v = null)
+    public function setCcShowInstances(?CcShowInstances $v = null)
     {
         if ($v === null) {
             $this->setDbInstanceId(NULL);
@@ -1860,7 +1888,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @return CcShowInstances The associated CcShowInstances object.
      * @throws PropelException
      */
-    public function getCcShowInstances(PropelPDO $con = null, $doQuery = true)
+    public function getCcShowInstances(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcShowInstances === null && ($this->instance_id !== null) && $doQuery) {
             $this->aCcShowInstances = CcShowInstancesQuery::create()->findPk($this->instance_id, $con);
@@ -1883,7 +1911,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @return CcSchedule The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcFiles(CcFiles $v = null)
+    public function setCcFiles(?CcFiles $v = null)
     {
         if ($v === null) {
             $this->setDbFileId(NULL);
@@ -1912,7 +1940,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @return CcFiles The associated CcFiles object.
      * @throws PropelException
      */
-    public function getCcFiles(PropelPDO $con = null, $doQuery = true)
+    public function getCcFiles(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcFiles === null && ($this->file_id !== null) && $doQuery) {
             $this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
@@ -1935,7 +1963,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @return CcSchedule The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcWebstream(CcWebstream $v = null)
+    public function setCcWebstream(?CcWebstream $v = null)
     {
         if ($v === null) {
             $this->setDbStreamId(NULL);
@@ -1964,7 +1992,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @return CcWebstream The associated CcWebstream object.
      * @throws PropelException
      */
-    public function getCcWebstream(PropelPDO $con = null, $doQuery = true)
+    public function getCcWebstream(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcWebstream === null && ($this->stream_id !== null) && $doQuery) {
             $this->aCcWebstream = CcWebstreamQuery::create()->findPk($this->stream_id, $con);
@@ -2058,7 +2086,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcWebstreamMetadata[] List of CcWebstreamMetadata objects
      * @throws PropelException
      */
-    public function getCcWebstreamMetadatas($criteria = null, PropelPDO $con = null)
+    public function getCcWebstreamMetadatas($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcWebstreamMetadatasPartial && !$this->isNew();
         if (null === $this->collCcWebstreamMetadatas || null !== $criteria  || $partial) {
@@ -2113,7 +2141,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcSchedule The current object (for fluent API support)
      */
-    public function setCcWebstreamMetadatas(PropelCollection $ccWebstreamMetadatas, PropelPDO $con = null)
+    public function setCcWebstreamMetadatas(PropelCollection $ccWebstreamMetadatas, ?PropelPDO $con = null)
     {
         $ccWebstreamMetadatasToDelete = $this->getCcWebstreamMetadatas(new Criteria(), $con)->diff($ccWebstreamMetadatas);
 
@@ -2144,7 +2172,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * @return int             Count of related CcWebstreamMetadata objects.
      * @throws PropelException
      */
-    public function countCcWebstreamMetadatas(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcWebstreamMetadatas(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcWebstreamMetadatasPartial && !$this->isNew();
         if (null === $this->collCcWebstreamMetadatas || null !== $criteria || $partial) {

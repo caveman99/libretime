@@ -369,7 +369,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * The value for the file_exists field.
      * Note: this column has a database default value of: true
-     * @var        boolean
+     * @var        bool
      */
     protected $file_exists;
 
@@ -402,28 +402,28 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * The value for the silan_check field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $silan_check;
 
     /**
      * The value for the hidden field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $hidden;
 
     /**
      * The value for the is_scheduled field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $is_scheduled;
 
     /**
      * The value for the is_playlist field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $is_playlist;
 
@@ -498,12 +498,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $collCcPlayoutHistorysPartial;
 
     /**
-     * @var        PropelObjectCollection|ThirdPartyTrackReferences[] Collection to store aggregation of ThirdPartyTrackReferences objects.
-     */
-    protected $collThirdPartyTrackReferencess;
-    protected $collThirdPartyTrackReferencessPartial;
-
-    /**
      * @var        PropelObjectCollection|PodcastEpisodes[] Collection to store aggregation of PodcastEpisodes objects.
      */
     protected $collPodcastEpisodess;
@@ -558,12 +552,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $ccPlayoutHistorysScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
-    protected $thirdPartyTrackReferencessScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -722,7 +710,14 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -757,7 +752,14 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -792,7 +794,14 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -1286,7 +1295,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [file_exists] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbFileExists()
     {
@@ -1341,7 +1350,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [silan_check] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbSilanCheck()
     {
@@ -1352,7 +1361,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [hidden] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbHidden()
     {
@@ -1363,7 +1372,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [is_scheduled] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbIsScheduled()
     {
@@ -1374,7 +1383,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [is_playlist] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbIsPlaylist()
     {
@@ -2607,7 +2616,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -2724,7 +2733,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -2753,7 +2762,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -2782,7 +2791,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -2811,7 +2820,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -3059,15 +3068,15 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->subject = ($row[$startcol + 52] !== null) ? (string) $row[$startcol + 52] : null;
             $this->contributor = ($row[$startcol + 53] !== null) ? (string) $row[$startcol + 53] : null;
             $this->language = ($row[$startcol + 54] !== null) ? (string) $row[$startcol + 54] : null;
-            $this->file_exists = ($row[$startcol + 55] !== null) ? (boolean) $row[$startcol + 55] : null;
+            $this->file_exists = ($row[$startcol + 55] !== null) ? (bool) $row[$startcol + 55] : null;
             $this->replay_gain = ($row[$startcol + 56] !== null) ? (string) $row[$startcol + 56] : null;
             $this->owner_id = ($row[$startcol + 57] !== null) ? (int) $row[$startcol + 57] : null;
             $this->cuein = ($row[$startcol + 58] !== null) ? (string) $row[$startcol + 58] : null;
             $this->cueout = ($row[$startcol + 59] !== null) ? (string) $row[$startcol + 59] : null;
-            $this->silan_check = ($row[$startcol + 60] !== null) ? (boolean) $row[$startcol + 60] : null;
-            $this->hidden = ($row[$startcol + 61] !== null) ? (boolean) $row[$startcol + 61] : null;
-            $this->is_scheduled = ($row[$startcol + 62] !== null) ? (boolean) $row[$startcol + 62] : null;
-            $this->is_playlist = ($row[$startcol + 63] !== null) ? (boolean) $row[$startcol + 63] : null;
+            $this->silan_check = ($row[$startcol + 60] !== null) ? (bool) $row[$startcol + 60] : null;
+            $this->hidden = ($row[$startcol + 61] !== null) ? (bool) $row[$startcol + 61] : null;
+            $this->is_scheduled = ($row[$startcol + 62] !== null) ? (bool) $row[$startcol + 62] : null;
+            $this->is_playlist = ($row[$startcol + 63] !== null) ? (bool) $row[$startcol + 63] : null;
             $this->filesize = ($row[$startcol + 64] !== null) ? (int) $row[$startcol + 64] : null;
             $this->description = ($row[$startcol + 65] !== null) ? (string) $row[$startcol + 65] : null;
             $this->artwork = ($row[$startcol + 66] !== null) ? (string) $row[$startcol + 66] : null;
@@ -3125,7 +3134,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -3165,8 +3174,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
             $this->collCcPlayoutHistorys = null;
 
-            $this->collThirdPartyTrackReferencess = null;
-
             $this->collPodcastEpisodess = null;
 
         } // if (deep)
@@ -3182,7 +3189,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -3225,7 +3232,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -3398,23 +3405,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
             if ($this->collCcPlayoutHistorys !== null) {
                 foreach ($this->collCcPlayoutHistorys as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->thirdPartyTrackReferencessScheduledForDeletion !== null) {
-                if (!$this->thirdPartyTrackReferencessScheduledForDeletion->isEmpty()) {
-                    ThirdPartyTrackReferencesQuery::create()
-                        ->filterByPrimaryKeys($this->thirdPartyTrackReferencessScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->thirdPartyTrackReferencessScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collThirdPartyTrackReferencess !== null) {
-                foreach ($this->collThirdPartyTrackReferencess as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -4049,14 +4039,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     }
                 }
 
-                if ($this->collThirdPartyTrackReferencess !== null) {
-                    foreach ($this->collThirdPartyTrackReferencess as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
                 if ($this->collPodcastEpisodess !== null) {
                     foreach ($this->collPodcastEpisodess as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -4431,9 +4413,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             if (null !== $this->collCcPlayoutHistorys) {
                 $result['CcPlayoutHistorys'] = $this->collCcPlayoutHistorys->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collThirdPartyTrackReferencess) {
-                $result['ThirdPartyTrackReferencess'] = $this->collThirdPartyTrackReferencess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collPodcastEpisodess) {
                 $result['PodcastEpisodess'] = $this->collPodcastEpisodess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -5015,12 +4994,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 }
             }
 
-            foreach ($this->getThirdPartyTrackReferencess() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addThirdPartyTrackReferences($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getPodcastEpisodess() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPodcastEpisodes($relObj->copy($deepCopy));
@@ -5084,7 +5057,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return CcFiles The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setFkOwner(CcSubjs $v = null)
+    public function setFkOwner(?CcSubjs $v = null)
     {
         if ($v === null) {
             $this->setDbOwnerId(NULL);
@@ -5113,7 +5086,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return CcSubjs The associated CcSubjs object.
      * @throws PropelException
      */
-    public function getFkOwner(PropelPDO $con = null, $doQuery = true)
+    public function getFkOwner(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aFkOwner === null && ($this->owner_id !== null) && $doQuery) {
             $this->aFkOwner = CcSubjsQuery::create()->findPk($this->owner_id, $con);
@@ -5136,7 +5109,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return CcFiles The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcSubjsRelatedByDbEditedby(CcSubjs $v = null)
+    public function setCcSubjsRelatedByDbEditedby(?CcSubjs $v = null)
     {
         if ($v === null) {
             $this->setDbEditedby(NULL);
@@ -5165,7 +5138,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return CcSubjs The associated CcSubjs object.
      * @throws PropelException
      */
-    public function getCcSubjsRelatedByDbEditedby(PropelPDO $con = null, $doQuery = true)
+    public function getCcSubjsRelatedByDbEditedby(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcSubjsRelatedByDbEditedby === null && ($this->editedby !== null) && $doQuery) {
             $this->aCcSubjsRelatedByDbEditedby = CcSubjsQuery::create()->findPk($this->editedby, $con);
@@ -5188,7 +5161,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return CcFiles The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcTracktypes(CcTracktypes $v = null)
+    public function setCcTracktypes(?CcTracktypes $v = null)
     {
         if ($v === null) {
             $this->setDbTrackTypeId(NULL);
@@ -5217,7 +5190,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return CcTracktypes The associated CcTracktypes object.
      * @throws PropelException
      */
-    public function getCcTracktypes(PropelPDO $con = null, $doQuery = true)
+    public function getCcTracktypes(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcTracktypes === null && ($this->track_type_id !== null) && $doQuery) {
             $this->aCcTracktypes = CcTracktypesQuery::create()->findPk($this->track_type_id, $con);
@@ -5258,9 +5231,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         }
         if ('CcPlayoutHistory' == $relationName) {
             $this->initCcPlayoutHistorys();
-        }
-        if ('ThirdPartyTrackReferences' == $relationName) {
-            $this->initThirdPartyTrackReferencess();
         }
         if ('PodcastEpisodes' == $relationName) {
             $this->initPodcastEpisodess();
@@ -5329,7 +5299,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcShowInstances[] List of CcShowInstances objects
      * @throws PropelException
      */
-    public function getCcShowInstancess($criteria = null, PropelPDO $con = null)
+    public function getCcShowInstancess($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowInstancessPartial && !$this->isNew();
         if (null === $this->collCcShowInstancess || null !== $criteria  || $partial) {
@@ -5384,7 +5354,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcFiles The current object (for fluent API support)
      */
-    public function setCcShowInstancess(PropelCollection $ccShowInstancess, PropelPDO $con = null)
+    public function setCcShowInstancess(PropelCollection $ccShowInstancess, ?PropelPDO $con = null)
     {
         $ccShowInstancessToDelete = $this->getCcShowInstancess(new Criteria(), $con)->diff($ccShowInstancess);
 
@@ -5415,7 +5385,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return int             Count of related CcShowInstances objects.
      * @throws PropelException
      */
-    public function countCcShowInstancess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcShowInstancess(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowInstancessPartial && !$this->isNew();
         if (null === $this->collCcShowInstancess || null !== $criteria || $partial) {
@@ -5604,7 +5574,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcPlaylistcontents[] List of CcPlaylistcontents objects
      * @throws PropelException
      */
-    public function getCcPlaylistcontentss($criteria = null, PropelPDO $con = null)
+    public function getCcPlaylistcontentss($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlaylistcontentssPartial && !$this->isNew();
         if (null === $this->collCcPlaylistcontentss || null !== $criteria  || $partial) {
@@ -5659,7 +5629,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcFiles The current object (for fluent API support)
      */
-    public function setCcPlaylistcontentss(PropelCollection $ccPlaylistcontentss, PropelPDO $con = null)
+    public function setCcPlaylistcontentss(PropelCollection $ccPlaylistcontentss, ?PropelPDO $con = null)
     {
         $ccPlaylistcontentssToDelete = $this->getCcPlaylistcontentss(new Criteria(), $con)->diff($ccPlaylistcontentss);
 
@@ -5690,7 +5660,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return int             Count of related CcPlaylistcontents objects.
      * @throws PropelException
      */
-    public function countCcPlaylistcontentss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcPlaylistcontentss(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlaylistcontentssPartial && !$this->isNew();
         if (null === $this->collCcPlaylistcontentss || null !== $criteria || $partial) {
@@ -5879,7 +5849,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcBlockcontents[] List of CcBlockcontents objects
      * @throws PropelException
      */
-    public function getCcBlockcontentss($criteria = null, PropelPDO $con = null)
+    public function getCcBlockcontentss($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcBlockcontentssPartial && !$this->isNew();
         if (null === $this->collCcBlockcontentss || null !== $criteria  || $partial) {
@@ -5934,7 +5904,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcFiles The current object (for fluent API support)
      */
-    public function setCcBlockcontentss(PropelCollection $ccBlockcontentss, PropelPDO $con = null)
+    public function setCcBlockcontentss(PropelCollection $ccBlockcontentss, ?PropelPDO $con = null)
     {
         $ccBlockcontentssToDelete = $this->getCcBlockcontentss(new Criteria(), $con)->diff($ccBlockcontentss);
 
@@ -5965,7 +5935,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return int             Count of related CcBlockcontents objects.
      * @throws PropelException
      */
-    public function countCcBlockcontentss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcBlockcontentss(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcBlockcontentssPartial && !$this->isNew();
         if (null === $this->collCcBlockcontentss || null !== $criteria || $partial) {
@@ -6129,7 +6099,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcSchedule[] List of CcSchedule objects
      * @throws PropelException
      */
-    public function getCcSchedules($criteria = null, PropelPDO $con = null)
+    public function getCcSchedules($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcSchedulesPartial && !$this->isNew();
         if (null === $this->collCcSchedules || null !== $criteria  || $partial) {
@@ -6184,7 +6154,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcFiles The current object (for fluent API support)
      */
-    public function setCcSchedules(PropelCollection $ccSchedules, PropelPDO $con = null)
+    public function setCcSchedules(PropelCollection $ccSchedules, ?PropelPDO $con = null)
     {
         $ccSchedulesToDelete = $this->getCcSchedules(new Criteria(), $con)->diff($ccSchedules);
 
@@ -6215,7 +6185,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return int             Count of related CcSchedule objects.
      * @throws PropelException
      */
-    public function countCcSchedules(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcSchedules(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcSchedulesPartial && !$this->isNew();
         if (null === $this->collCcSchedules || null !== $criteria || $partial) {
@@ -6404,7 +6374,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcPlayoutHistory[] List of CcPlayoutHistory objects
      * @throws PropelException
      */
-    public function getCcPlayoutHistorys($criteria = null, PropelPDO $con = null)
+    public function getCcPlayoutHistorys($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlayoutHistorysPartial && !$this->isNew();
         if (null === $this->collCcPlayoutHistorys || null !== $criteria  || $partial) {
@@ -6459,7 +6429,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcFiles The current object (for fluent API support)
      */
-    public function setCcPlayoutHistorys(PropelCollection $ccPlayoutHistorys, PropelPDO $con = null)
+    public function setCcPlayoutHistorys(PropelCollection $ccPlayoutHistorys, ?PropelPDO $con = null)
     {
         $ccPlayoutHistorysToDelete = $this->getCcPlayoutHistorys(new Criteria(), $con)->diff($ccPlayoutHistorys);
 
@@ -6490,7 +6460,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return int             Count of related CcPlayoutHistory objects.
      * @throws PropelException
      */
-    public function countCcPlayoutHistorys(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcPlayoutHistorys(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlayoutHistorysPartial && !$this->isNew();
         if (null === $this->collCcPlayoutHistorys || null !== $criteria || $partial) {
@@ -6593,231 +6563,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     }
 
     /**
-     * Clears out the collThirdPartyTrackReferencess collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return CcFiles The current object (for fluent API support)
-     * @see        addThirdPartyTrackReferencess()
-     */
-    public function clearThirdPartyTrackReferencess()
-    {
-        $this->collThirdPartyTrackReferencess = null; // important to set this to null since that means it is uninitialized
-        $this->collThirdPartyTrackReferencessPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collThirdPartyTrackReferencess collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialThirdPartyTrackReferencess($v = true)
-    {
-        $this->collThirdPartyTrackReferencessPartial = $v;
-    }
-
-    /**
-     * Initializes the collThirdPartyTrackReferencess collection.
-     *
-     * By default this just sets the collThirdPartyTrackReferencess collection to an empty array (like clearcollThirdPartyTrackReferencess());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initThirdPartyTrackReferencess($overrideExisting = true)
-    {
-        if (null !== $this->collThirdPartyTrackReferencess && !$overrideExisting) {
-            return;
-        }
-        $this->collThirdPartyTrackReferencess = new PropelObjectCollection();
-        $this->collThirdPartyTrackReferencess->setModel('ThirdPartyTrackReferences');
-    }
-
-    /**
-     * Gets an array of ThirdPartyTrackReferences objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this CcFiles is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|ThirdPartyTrackReferences[] List of ThirdPartyTrackReferences objects
-     * @throws PropelException
-     */
-    public function getThirdPartyTrackReferencess($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collThirdPartyTrackReferencessPartial && !$this->isNew();
-        if (null === $this->collThirdPartyTrackReferencess || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collThirdPartyTrackReferencess) {
-                // return empty collection
-                $this->initThirdPartyTrackReferencess();
-            } else {
-                $collThirdPartyTrackReferencess = ThirdPartyTrackReferencesQuery::create(null, $criteria)
-                    ->filterByCcFiles($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collThirdPartyTrackReferencessPartial && count($collThirdPartyTrackReferencess)) {
-                      $this->initThirdPartyTrackReferencess(false);
-
-                      foreach ($collThirdPartyTrackReferencess as $obj) {
-                        if (false == $this->collThirdPartyTrackReferencess->contains($obj)) {
-                          $this->collThirdPartyTrackReferencess->append($obj);
-                        }
-                      }
-
-                      $this->collThirdPartyTrackReferencessPartial = true;
-                    }
-
-                    $collThirdPartyTrackReferencess->getInternalIterator()->rewind();
-
-                    return $collThirdPartyTrackReferencess;
-                }
-
-                if ($partial && $this->collThirdPartyTrackReferencess) {
-                    foreach ($this->collThirdPartyTrackReferencess as $obj) {
-                        if ($obj->isNew()) {
-                            $collThirdPartyTrackReferencess[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collThirdPartyTrackReferencess = $collThirdPartyTrackReferencess;
-                $this->collThirdPartyTrackReferencessPartial = false;
-            }
-        }
-
-        return $this->collThirdPartyTrackReferencess;
-    }
-
-    /**
-     * Sets a collection of ThirdPartyTrackReferences objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $thirdPartyTrackReferencess A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setThirdPartyTrackReferencess(PropelCollection $thirdPartyTrackReferencess, PropelPDO $con = null)
-    {
-        $thirdPartyTrackReferencessToDelete = $this->getThirdPartyTrackReferencess(new Criteria(), $con)->diff($thirdPartyTrackReferencess);
-
-
-        $this->thirdPartyTrackReferencessScheduledForDeletion = $thirdPartyTrackReferencessToDelete;
-
-        foreach ($thirdPartyTrackReferencessToDelete as $thirdPartyTrackReferencesRemoved) {
-            $thirdPartyTrackReferencesRemoved->setCcFiles(null);
-        }
-
-        $this->collThirdPartyTrackReferencess = null;
-        foreach ($thirdPartyTrackReferencess as $thirdPartyTrackReferences) {
-            $this->addThirdPartyTrackReferences($thirdPartyTrackReferences);
-        }
-
-        $this->collThirdPartyTrackReferencess = $thirdPartyTrackReferencess;
-        $this->collThirdPartyTrackReferencessPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related ThirdPartyTrackReferences objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related ThirdPartyTrackReferences objects.
-     * @throws PropelException
-     */
-    public function countThirdPartyTrackReferencess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collThirdPartyTrackReferencessPartial && !$this->isNew();
-        if (null === $this->collThirdPartyTrackReferencess || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collThirdPartyTrackReferencess) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getThirdPartyTrackReferencess());
-            }
-            $query = ThirdPartyTrackReferencesQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByCcFiles($this)
-                ->count($con);
-        }
-
-        return count($this->collThirdPartyTrackReferencess);
-    }
-
-    /**
-     * Method called to associate a ThirdPartyTrackReferences object to this object
-     * through the ThirdPartyTrackReferences foreign key attribute.
-     *
-     * @param    ThirdPartyTrackReferences $l ThirdPartyTrackReferences
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function addThirdPartyTrackReferences(ThirdPartyTrackReferences $l)
-    {
-        if ($this->collThirdPartyTrackReferencess === null) {
-            $this->initThirdPartyTrackReferencess();
-            $this->collThirdPartyTrackReferencessPartial = true;
-        }
-
-        if (!in_array($l, $this->collThirdPartyTrackReferencess->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddThirdPartyTrackReferences($l);
-
-            if ($this->thirdPartyTrackReferencessScheduledForDeletion and $this->thirdPartyTrackReferencessScheduledForDeletion->contains($l)) {
-                $this->thirdPartyTrackReferencessScheduledForDeletion->remove($this->thirdPartyTrackReferencessScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	ThirdPartyTrackReferences $thirdPartyTrackReferences The thirdPartyTrackReferences object to add.
-     */
-    protected function doAddThirdPartyTrackReferences($thirdPartyTrackReferences)
-    {
-        $this->collThirdPartyTrackReferencess[]= $thirdPartyTrackReferences;
-        $thirdPartyTrackReferences->setCcFiles($this);
-    }
-
-    /**
-     * @param	ThirdPartyTrackReferences $thirdPartyTrackReferences The thirdPartyTrackReferences object to remove.
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function removeThirdPartyTrackReferences($thirdPartyTrackReferences)
-    {
-        if ($this->getThirdPartyTrackReferencess()->contains($thirdPartyTrackReferences)) {
-            $this->collThirdPartyTrackReferencess->remove($this->collThirdPartyTrackReferencess->search($thirdPartyTrackReferences));
-            if (null === $this->thirdPartyTrackReferencessScheduledForDeletion) {
-                $this->thirdPartyTrackReferencessScheduledForDeletion = clone $this->collThirdPartyTrackReferencess;
-                $this->thirdPartyTrackReferencessScheduledForDeletion->clear();
-            }
-            $this->thirdPartyTrackReferencessScheduledForDeletion[]= $thirdPartyTrackReferences;
-            $thirdPartyTrackReferences->setCcFiles(null);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears out the collPodcastEpisodess collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -6879,7 +6624,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return PropelObjectCollection|PodcastEpisodes[] List of PodcastEpisodes objects
      * @throws PropelException
      */
-    public function getPodcastEpisodess($criteria = null, PropelPDO $con = null)
+    public function getPodcastEpisodess($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collPodcastEpisodessPartial && !$this->isNew();
         if (null === $this->collPodcastEpisodess || null !== $criteria  || $partial) {
@@ -6934,7 +6679,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcFiles The current object (for fluent API support)
      */
-    public function setPodcastEpisodess(PropelCollection $podcastEpisodess, PropelPDO $con = null)
+    public function setPodcastEpisodess(PropelCollection $podcastEpisodess, ?PropelPDO $con = null)
     {
         $podcastEpisodessToDelete = $this->getPodcastEpisodess(new Criteria(), $con)->diff($podcastEpisodess);
 
@@ -6965,7 +6710,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @return int             Count of related PodcastEpisodes objects.
      * @throws PropelException
      */
-    public function countPodcastEpisodess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countPodcastEpisodess(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collPodcastEpisodessPartial && !$this->isNew();
         if (null === $this->collPodcastEpisodess || null !== $criteria || $partial) {
@@ -7188,11 +6933,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collThirdPartyTrackReferencess) {
-                foreach ($this->collThirdPartyTrackReferencess as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collPodcastEpisodess) {
                 foreach ($this->collPodcastEpisodess as $o) {
                     $o->clearAllReferences($deep);
@@ -7231,10 +6971,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->collCcPlayoutHistorys->clearIterator();
         }
         $this->collCcPlayoutHistorys = null;
-        if ($this->collThirdPartyTrackReferencess instanceof PropelCollection) {
-            $this->collThirdPartyTrackReferencess->clearIterator();
-        }
-        $this->collThirdPartyTrackReferencess = null;
         if ($this->collPodcastEpisodess instanceof PropelCollection) {
             $this->collPodcastEpisodess->clearIterator();
         }

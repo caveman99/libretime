@@ -11,6 +11,7 @@ define('REPEAT_QUAD_WEEKLY', 5);
 
 class Application_Service_ShowService
 {
+    protected $linkedShowContent;
     private $ccShow;
     private $isRecorded;
     private $isRebroadcast;
@@ -50,7 +51,7 @@ class Application_Service_ShowService
         $this->newInstanceIdsCreated = [];
     }
 
-    public function editRepeatingShowInstance($showData)
+    public function editRepeatingShowInstance($showData): void
     {
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
@@ -178,7 +179,7 @@ class Application_Service_ShowService
      * start time in case the show's timezone is changed and we are crossing
      * over DST.
      */
-    private function storeOrigLocalShowInfo()
+    private function storeOrigLocalShowInfo(): void
     {
         if ($this->ccShow->isRepeating()) {
             $this->origCcShowDay = clone $this->ccShow->getFirstRepeatingCcShowDay();
@@ -291,7 +292,7 @@ class Application_Service_ShowService
      * instances that already exist and any new instances that
      * get created (by adding a new repeat show day).
      */
-    private function storeInstanceIds()
+    private function storeInstanceIds(): void
     {
         $instances = $this->ccShow->getFutureCcShowInstancess();
         foreach ($instances as $instance) {
@@ -305,7 +306,7 @@ class Application_Service_ShowService
      *
      * @param mixed $showData
      */
-    private function adjustSchedule($showData)
+    private function adjustSchedule($showData): void
     {
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
@@ -471,7 +472,7 @@ class Application_Service_ShowService
         return CcShowDaysPeer::doSelect($c);
     }
 
-    public static function formatShowDuration($duration)
+    public static function formatShowDuration($duration): string
     {
         $hPos = strpos($duration, 'h');
         $mPos = strpos($duration, 'm');
@@ -495,12 +496,12 @@ class Application_Service_ShowService
      * that is currently being edited. They will get recreated with
      * the new show day specs.
      */
-    private function deleteCcShowDays()
+    private function deleteCcShowDays(): void
     {
         CcShowDaysQuery::create()->filterByDbShowId($this->ccShow->getDbId())->delete();
     }
 
-    private function deleteRebroadcastInstances()
+    private function deleteRebroadcastInstances(): void
     {
         $sql = <<<'SQL'
 DELETE FROM cc_show_instances
@@ -514,7 +515,7 @@ SQL;
         ], 'execute');
     }
 
-    private function deleteAllShowDays($showId)
+    private function deleteAllShowDays($showId): void
     {
         CcShowDaysQuery::create()
             ->filterByDbShowId($showId)
@@ -530,8 +531,10 @@ SQL;
      * - Update start and end time
      *
      * @param $showData edit show form values in raw form
+     *
+     * @return mixed[]
      */
-    private function delegateInstanceCleanup($showData)
+    private function delegateInstanceCleanup($showData): array
     {
         $showId = $this->ccShow->getDbId();
 
@@ -693,7 +696,7 @@ SQL;
     }*/
 
     // returns a DateTime of the current show end date set to the timezone of the show.
-    public function getRepeatingEndDate()
+    public function getRepeatingEndDate(): ?DateTime
     {
         $sql = <<<'SQL'
 SELECT last_show, timezone
@@ -721,7 +724,7 @@ SQL;
         return $date;
     }
 
-    private function deleteInstancesFromDate($endDate, $showId)
+    private function deleteInstancesFromDate($endDate, $showId): void
     {
         $sql = <<<'SQL'
 DELETE FROM cc_show_instances
@@ -735,7 +738,7 @@ SQL;
         ], 'execute');
     }
 
-    private function deleteInstancesBeforeDate($newStartDate, $showId)
+    private function deleteInstancesBeforeDate($newStartDate, $showId): void
     {
         $sql = <<<'SQL'
 DELETE
@@ -760,7 +763,7 @@ SQL;
      * @param       $showDays    array of ccShowDays objects
      * @param mixed $showId
      */
-    private function deleteRemovedShowDayInstances($daysRemoved, $showDays, $showId)
+    private function deleteRemovedShowDayInstances($daysRemoved, $showDays, $showId): void
     {
         $daysRemovedUTC = [];
 
@@ -781,7 +784,10 @@ SQL;
                 ->delete();
         }
 
-        $uncheckedDays = pg_escape_string(implode(',', $daysRemovedUTC));
+        // Day-of-week values (0-6) come from DateTime::format('w'), so they are
+        // always safe to interpolate directly without needing pg_escape_string(),
+        // which requires an explicit PostgreSQL connection since PHP 8.1.
+        $uncheckedDays = implode(',', array_map('intval', $daysRemovedUTC));
 
         $sql = <<<SQL
 DELETE
@@ -856,7 +862,7 @@ SQL;
         }
     }
 
-    public function deleteShowInstances($ccShowInstances, $showId)
+    public function deleteShowInstances($ccShowInstances, $showId): void
     {
         foreach ($ccShowInstances as $ccShowInstance) {
             $instanceId = $ccShowInstance->getDbId();
@@ -891,7 +897,7 @@ SQL;
         }
     }
 
-    private function setLastRepeatingShowDate($showId)
+    private function setLastRepeatingShowDate($showId): void
     {
         $ccShowInstances = CcShowInstancesQuery::create()
             ->filterByDbShowId($showId)
@@ -960,7 +966,7 @@ SQL;
         }
     }
 
-    private function checkToDeleteCcShow($showId)
+    private function checkToDeleteCcShow($showId): bool
     {
         // check if there are any non deleted show instances remaining.
         $ccShowInstances = CcShowInstancesQuery::create()
@@ -977,7 +983,7 @@ SQL;
         return false;
     }
 
-    private function deleteAllInstances($showId)
+    private function deleteAllInstances($showId): void
     {
         $sql = <<<'SQL'
 DELETE
@@ -995,7 +1001,7 @@ SQL;
         );
     }
 
-    private function deleteAllRepeatInstances($currentShowDay, $showId)
+    private function deleteAllRepeatInstances($currentShowDay, $showId): void
     {
         $firstShow = $currentShowDay->getUTCStartDateAndTime();
 
@@ -1025,7 +1031,7 @@ SQL;
      *
      * @return DateTime object in user's local timezone
      */
-    private function calculateEndDate($showData)
+    private function calculateEndDate($showData): ?DateTime
     {
         // if no end return null
         if ($showData['add_show_no_end']) {
@@ -1051,7 +1057,7 @@ SQL;
         return $endDate;
     }
 
-    private function updateScheduleStartEndTimes($showData)
+    private function updateScheduleStartEndTimes($showData): void
     {
         $showId = $this->ccShow->getDbId();
         // DateTime in show's local time
@@ -1090,7 +1096,7 @@ SQL;
      *
      * @param mixed $diff
      */
-    private function updateInstanceStartEndTime($diff)
+    private function updateInstanceStartEndTime($diff): void
     {
         $sql = <<<'SQL'
 UPDATE cc_show_instances
@@ -1117,7 +1123,7 @@ SQL;
      * @param DateTime   $showStartDate user's local time
      * @param mixed      $instanceId
      */
-    private function createRebroadcastInstances($showDay, $showStartDate, $instanceId)
+    private function createRebroadcastInstances($showDay, $showStartDate, $instanceId): void
     {
         $currentUtcTimestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
         $showId = $this->ccShow->getDbId();
@@ -1213,7 +1219,7 @@ SQL;
         $repeatType,
         $repeatInterval,
         $daysAdded = null
-    ) {
+    ): void {
         $show_id = $showDay->getDbShowId();
         $first_show = $showDay->getDbFirstShow(); // non-UTC
         $last_show = $showDay->getDbLastShow(); // non-UTC
@@ -1316,7 +1322,7 @@ SQL;
         }
     }
 
-    private function createMonthlyRepeatInstances($showDay, $populateUntil)
+    private function createMonthlyRepeatInstances($showDay, $populateUntil): void
     {
         $show_id = $showDay->getDbShowId();
         $first_show = $showDay->getDbFirstShow(); // non-UTC
@@ -1423,8 +1429,10 @@ SQL;
      * i.e. second monday of each month.
      *
      * @param string $showStart
+     *
+     * @return array<int, mixed>
      */
-    public static function getMonthlyWeeklyRepeatInterval($showStart)
+    public static function getMonthlyWeeklyRepeatInterval($showStart): array
     {
         $start = clone $showStart;
         $dayOfMonth = $start->format('j');
@@ -1480,7 +1488,7 @@ SQL;
      * @param mixed $timezone
      * @param mixed $startTime
      */
-    private function getNextMonthlyMonthlyRepeatDate($start, $timezone, $startTime)
+    private function getNextMonthlyMonthlyRepeatDate($start, $timezone, $startTime): DateTime
     {
         $dt = new DateTime($start->format('Y-m'), new DateTimeZone($timezone));
 
@@ -1547,7 +1555,7 @@ SQL;
         return $dt;
     }
 
-    private function getNextRepeatingPopulateStartDateTime($showDay)
+    private function getNextRepeatingPopulateStartDateTime($showDay): DateTime
     {
         $nextPopDate = $showDay->getDbNextPopDate();
         $startTime = $showDay->getDbStartTime();
@@ -1569,7 +1577,7 @@ SQL;
      * @param mixed $repeatInterval
      * @param mixed $populateUntil
      */
-    private function getDatePeriod($start, $timezone, $lastShow, $repeatInterval, $populateUntil)
+    private function getDatePeriod($start, $timezone, $lastShow, $repeatInterval, $populateUntil): DatePeriod
     {
         if (isset($lastShow)) {
             $endDatePeriod = new DateTime($lastShow, new DateTimeZone($timezone));
@@ -1580,7 +1588,7 @@ SQL;
         return new DatePeriod($start, $repeatInterval, $endDatePeriod);
     }
 
-    private function hasInstance($starts)
+    private function hasInstance($starts): bool
     {
         return $this->getInstance($starts) ? true : false;
     }
@@ -1618,7 +1626,7 @@ SQL;
         return $ccShowInstance[0];
     }
 
-    private function hasCcShowDay($repeatType, $day)
+    private function hasCcShowDay($repeatType, $day): bool
     {
         return $this->getCcShowDay($repeatType, $day) ? true : false;
     }
@@ -1644,7 +1652,7 @@ SQL;
      *
      * @param mixed $showData
      */
-    public function setCcShow($showData)
+    public function setCcShow($showData): void
     {
         if (!$this->isUpdate) {
             $ccShow = new CcShow();
@@ -1698,7 +1706,7 @@ SQL;
      *
      * @param mixed $showData
      */
-    private function setCcShowDays($showData)
+    private function setCcShowDays($showData): void
     {
         $showId = $this->ccShow->getDbId();
 
@@ -1816,7 +1824,7 @@ SQL;
      * that is currently being edited. They will get recreated with
      * the new show specs.
      */
-    private function deleteCcShowRebroadcasts()
+    private function deleteCcShowRebroadcasts(): void
     {
         CcShowRebroadcastQuery::create()->filterByDbShowId($this->ccShow->getDbId())->delete();
     }
@@ -1826,7 +1834,7 @@ SQL;
      *
      * @param mixed $showData
      */
-    private function setCcShowRebroadcasts($showData)
+    private function setCcShowRebroadcasts($showData): void
     {
         $showId = $this->ccShow->getDbId();
 
@@ -1862,7 +1870,7 @@ SQL;
      * that is currently being edited. They will get recreated with
      * the new show specs.
      */
-    private function deleteCcShowHosts()
+    private function deleteCcShowHosts(): void
     {
         CcShowHostsQuery::create()->filterByDbShow($this->ccShow->getDbId())->delete();
     }
@@ -1872,7 +1880,7 @@ SQL;
      *
      * @param mixed $showData
      */
-    private function setCcShowHosts($showData)
+    private function setCcShowHosts($showData): void
     {
         if (is_array($showData['add_show_hosts'])) {
             foreach ($showData['add_show_hosts'] as $host) {
@@ -1909,9 +1917,9 @@ SQL;
      * @param string   $duration  time interval (h)h:(m)m(:ss)
      * @param array    $offset    (days, hours, mins) used for rebroadcast shows
      *
-     * @return array of 2 DateTime objects, start/end time of the show in UTC
+     * @return DateTime[] of 2 DateTime objects, start/end time of the show in UTC
      */
-    private function createUTCStartEndDateTime($showStart, $duration, $offset = null)
+    private function createUTCStartEndDateTime($showStart, $duration, $offset = null): array
     {
         $startDateTime = clone $showStart;
         $timezone = $startDateTime->getTimezone();
@@ -1945,7 +1953,7 @@ SQL;
      * @param mixed $day
      * @param mixed $showId
      */
-    private function setNextRepeatingShowDate($nextDate, $day, $showId)
+    private function setNextRepeatingShowDate($nextDate, $day, $showId): void
     {
         $nextInfo = explode(' ', $nextDate);
 

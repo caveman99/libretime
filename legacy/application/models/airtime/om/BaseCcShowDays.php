@@ -181,7 +181,14 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -216,7 +223,14 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -251,7 +265,14 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -330,7 +351,14 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -696,7 +724,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -737,7 +765,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -780,7 +808,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1457,7 +1485,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      * @return CcShowDays The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcShow(CcShow $v = null)
+    public function setCcShow(?CcShow $v = null)
     {
         if ($v === null) {
             $this->setDbShowId(NULL);
@@ -1486,7 +1514,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      * @return CcShow The associated CcShow object.
      * @throws PropelException
      */
-    public function getCcShow(PropelPDO $con = null, $doQuery = true)
+    public function getCcShow(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcShow === null && ($this->show_id !== null) && $doQuery) {
             $this->aCcShow = CcShowQuery::create()->findPk($this->show_id, $con);

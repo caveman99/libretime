@@ -75,7 +75,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
     /**
      * The value for the trackoffset field.
      * Note: this column has a database default value of: 0.0
-     * @var        double
+     * @var        float
      */
     protected $trackoffset;
 
@@ -259,7 +259,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
     /**
      * Get the [trackoffset] column value.
      *
-     * @return double
+     * @return float
      */
     public function getDbTrackOffset()
     {
@@ -328,7 +328,14 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -363,7 +370,14 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -532,13 +546,13 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
     /**
      * Set the value of [trackoffset] column.
      *
-     * @param  double $v new value
+     * @param  float $v new value
      * @return CcPlaylistcontents The current object (for fluent API support)
      */
     public function setDbTrackOffset($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (double) $v;
+            $v = (float) $v;
         }
 
         if ($this->trackoffset !== $v) {
@@ -730,7 +744,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
             $this->stream_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
             $this->type = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
             $this->position = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
-            $this->trackoffset = ($row[$startcol + 7] !== null) ? (double) $row[$startcol + 7] : null;
+            $this->trackoffset = ($row[$startcol + 7] !== null) ? (float) $row[$startcol + 7] : null;
             $this->cliplength = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->cuein = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->cueout = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
@@ -789,7 +803,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -832,7 +846,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -875,7 +889,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1618,7 +1632,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * @return CcPlaylistcontents The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcFiles(CcFiles $v = null)
+    public function setCcFiles(?CcFiles $v = null)
     {
         if ($v === null) {
             $this->setDbFileId(NULL);
@@ -1647,7 +1661,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * @return CcFiles The associated CcFiles object.
      * @throws PropelException
      */
-    public function getCcFiles(PropelPDO $con = null, $doQuery = true)
+    public function getCcFiles(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcFiles === null && ($this->file_id !== null) && $doQuery) {
             $this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
@@ -1670,7 +1684,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * @return CcPlaylistcontents The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcBlock(CcBlock $v = null)
+    public function setCcBlock(?CcBlock $v = null)
     {
         if ($v === null) {
             $this->setDbBlockId(NULL);
@@ -1699,7 +1713,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * @return CcBlock The associated CcBlock object.
      * @throws PropelException
      */
-    public function getCcBlock(PropelPDO $con = null, $doQuery = true)
+    public function getCcBlock(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcBlock === null && ($this->block_id !== null) && $doQuery) {
             $this->aCcBlock = CcBlockQuery::create()->findPk($this->block_id, $con);
@@ -1722,7 +1736,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * @return CcPlaylistcontents The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcPlaylist(CcPlaylist $v = null)
+    public function setCcPlaylist(?CcPlaylist $v = null)
     {
         // aggregate_column_relation behavior
         if (null !== $this->aCcPlaylist && $v !== $this->aCcPlaylist) {
@@ -1755,7 +1769,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * @return CcPlaylist The associated CcPlaylist object.
      * @throws PropelException
      */
-    public function getCcPlaylist(PropelPDO $con = null, $doQuery = true)
+    public function getCcPlaylist(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcPlaylist === null && ($this->playlist_id !== null) && $doQuery) {
             $this->aCcPlaylist = CcPlaylistQuery::create()->findPk($this->playlist_id, $con);
