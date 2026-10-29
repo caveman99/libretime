@@ -2,7 +2,7 @@
 
 class PreferenceController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         // Initialize action controller here
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
@@ -17,7 +17,7 @@ class PreferenceController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $request = $this->getRequest();
 
@@ -82,7 +82,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
-    public function stationPodcastSettingsAction()
+    public function stationPodcastSettingsAction(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -108,7 +108,7 @@ class PreferenceController extends Zend_Controller_Action
 
     public function directoryConfigAction() {}
 
-    public function removeLogoAction()
+    public function removeLogoAction(): void
     {
         SessionHelper::reopenSessionForWriting();
 
@@ -126,7 +126,7 @@ class PreferenceController extends Zend_Controller_Action
         Application_Model_Preference::SetStationLogo('');
     }
 
-    public function streamSettingAction()
+    public function streamSettingAction(): void
     {
         $request = $this->getRequest();
 
@@ -183,7 +183,7 @@ class PreferenceController extends Zend_Controller_Action
             $postData = explode('&', $params['data']);
             $values = [];
 
-            foreach ($postData as $k => $v) {
+            foreach ($postData as $v) {
                 $v = explode('=', urldecode($v));
                 $values[$v[0]] = $v[1];
             }
@@ -241,7 +241,7 @@ class PreferenceController extends Zend_Controller_Action
      *
      * @param array $values stream setting preference values
      */
-    private function setStreamPreferences($values)
+    private function setStreamPreferences($values): void
     {
         Application_Model_Preference::setOffAirMeta($values['offAirMeta']);
         Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
@@ -252,7 +252,7 @@ class PreferenceController extends Zend_Controller_Action
         Application_Model_Preference::SetAutoSwitch($values['auto_switch']);
     }
 
-    public function serverBrowseAction()
+    public function serverBrowseAction(): void
     {
         $request = $this->getRequest();
         $path = $request->getParam('path', null);
@@ -288,7 +288,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->_helper->json->sendJson($result);
     }
 
-    public function isImportInProgressAction()
+    public function isImportInProgressAction(): void
     {
         $now = time();
         $res = false;
@@ -298,7 +298,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->_helper->json->sendJson($res);
     }
 
-    public function getLiquidsoapStatusAction()
+    public function getLiquidsoapStatusAction(): void
     {
         $out = [];
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
@@ -313,7 +313,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->_helper->json->sendJson($out);
     }
 
-    public function getAdminPasswordStatusAction()
+    public function getAdminPasswordStatusAction(): void
     {
         SessionHelper::reopenSessionForWriting();
 
@@ -329,7 +329,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->_helper->json->sendJson($out);
     }
 
-    public function deleteAllFilesAction()
+    public function deleteAllFilesAction(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -360,7 +360,7 @@ class PreferenceController extends Zend_Controller_Action
             ->appendBody('OK');
     }
 
-    private function deleteFutureScheduleItems()
+    private function deleteFutureScheduleItems(): void
     {
         $utcTimezone = new DateTimeZone('UTC');
         $nowDateTime = new DateTime('now', $utcTimezone);
@@ -386,7 +386,7 @@ class PreferenceController extends Zend_Controller_Action
         }
     }
 
-    private function deleteStoredFiles()
+    private function deleteStoredFiles(): void
     {
         // Delete all files from the database
         $files = CcFilesQuery::create()->find();
