@@ -100,34 +100,6 @@ def test_liquidsoap_hooks_before_outputs(
     check_call(["liquidsoap", "--check", str(entrypoint_filepath)])
 
 
-def test_generate_entrypoint_metadata_router_disables_icy_metadata(
-    stream_preferences: StreamPreferences,
-):
-    entrypoint = generate_entrypoint(
-        log_filepath=Path("/var/log/radio.log"),
-        config=make_config_with_stream(
-            outputs={
-                "icecast": [
-                    {
-                        "enabled": True,
-                        "mount": "main.mp3",
-                        "source_password": "hackme",
-                        "audio": {"format": "mp3", "bitrate": 128},
-                    }
-                ]
-            }
-        ),
-        preferences=stream_preferences.model_copy(
-            update={"metadata_router_enabled": True}
-        ),
-        info=Info(
-            station_name="LibreTime",
-        ),
-        version=(2, 1, 3),
-    )
-    assert 'icy_metadata = "false",' in entrypoint
-
-
 def test_liquidsoap_unsupported_output_aac(
     tmp_path: Path,
     stream_preferences: StreamPreferences,
@@ -164,3 +136,31 @@ def test_liquidsoap_unsupported_output_aac(
         check_output(["liquidsoap", "--check", str(entrypoint_filepath)])
 
     assert b"Unsupported format: %fdkaac" in exception.value.stdout
+
+
+def test_generate_entrypoint_metadata_router_disables_icy_metadata(
+    stream_preferences: StreamPreferences,
+):
+    entrypoint = generate_entrypoint(
+        log_filepath=Path("/var/log/radio.log"),
+        config=make_config_with_stream(
+            outputs={
+                "icecast": [
+                    {
+                        "enabled": True,
+                        "mount": "main.mp3",
+                        "source_password": "hackme",
+                        "audio": {"format": "mp3", "bitrate": 128},
+                    }
+                ]
+            }
+        ),
+        preferences=stream_preferences.model_copy(
+            update={"metadata_router_enabled": True}
+        ),
+        info=Info(
+            station_name="LibreTime",
+        ),
+        version=(2, 1, 3),
+    )
+    assert 'icy_metadata = "false",' in entrypoint
