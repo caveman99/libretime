@@ -353,6 +353,7 @@ check_distribution()  {
   # shellcheck disable=SC2034
   case "$ID-$VERSION_ID" in
     debian-12)    is_debian=true && distro="bookworm" ;;
+    ubuntu-24.04) is_ubuntu=true && distro="noble" ;;
     *)
       error "could not determine supported distribution '$ID-$VERSION_ID'
 
@@ -386,13 +387,6 @@ list_packages() {
 
 prepare_packages_install() {
   if $is_ubuntu || $is_debian; then
-    DEBIAN_FRONTEND=noninteractive apt-get -q update
-  fi
-
-  if $is_ubuntu; then
-    install_packages software-properties-common
-    add-apt-repository -y ppa:libretime/libretime
-
     DEBIAN_FRONTEND=noninteractive apt-get -q update
   fi
 }
