@@ -3,10 +3,13 @@
 class Application_Common_TuneIn
 {
     /**
-     * @param $title  url encoded string
-     * @param $artist url encoded string
-     * Update with all fields (duration enables auto-expiration for type=dynamic)
-     * curl "http://localhost:9000/input/dynamic?input=radio-live&songID=123&artist=Artist&title=Song&duration=03:45&secret=supersecret123"
+     * Push metadata to the metadata router.
+     * The duration lets type=dynamic inputs expire automatically.
+     *
+     * @param string $title    url encoded string
+     * @param string $artist   url encoded string
+     * @param mixed  $file_id
+     * @param mixed  $duration
      */
     public static function sendMetadataToTunein($title, $artist, $file_id, $duration): void
     {
@@ -19,19 +22,13 @@ class Application_Common_TuneIn
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
-        $xmlResponse = curl_exec($ch);
+        curl_exec($ch);
         if (curl_error($ch)) {
             Logging::error('Failed to reach Router: ' . curl_errno($ch) . ' - ' . curl_error($ch) . ' - ' . curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
         }
         curl_close($ch);
 
-/*        $xmlObj = new SimpleXMLElement($xmlResponse);
-        if (!$xmlObj || $xmlObj->head->status != '200') {
-            Logging::info('Error occurred pushing metadata to Router:');
-            Logging::info($xmlResponse);
-        } elseif ($xmlObj->head->status == '200') {*/
-            Application_Model_Preference::setLastTuneinMetadataUpdate(time());
-//        }
+        Application_Model_Preference::setLastTuneinMetadataUpdate(time());
     }
 
     private static function getCredentialsQueryString(): string

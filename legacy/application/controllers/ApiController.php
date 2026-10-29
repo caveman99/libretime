@@ -788,7 +788,7 @@ class ApiController extends Zend_Controller_Action
                         $filePropelOrm = $file->getPropelOrm();
                         $title = urlencode($filePropelOrm->getDbTrackTitle());
                         $artist = urlencode($filePropelOrm->getDbArtistName());
-                        $duration = explode(".",$filePropelOrm->getDbLength());
+                        $duration = explode('.', $filePropelOrm->getDbLength());
                         $file_id = urlencode($filePropelOrm->getDbId());
                         Application_Common_TuneIn::sendMetadataToTunein($title, $artist, $file_id, urlencode($duration[0]));
                     }
@@ -1571,7 +1571,8 @@ class ApiController extends Zend_Controller_Action
                 Application_Common_TuneIn::sendMetadataToTunein(
                     $metadata['title'],
                     $metadata['artist'],
-                    0,0
+                    0,
+                    0
                 );
             }
         }

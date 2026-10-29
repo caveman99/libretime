@@ -128,7 +128,7 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
 // TuneIn integration
-define('TUNEIN_API_URL', 'https://md-meta.fivemile.org/input/dynamic');
+define('TUNEIN_API_URL', 'https://air.radiotime.com/Playing.ashx');
 
 // Publish Services
 define('STATION_PODCAST_SERVICE_NAME', 'station_podcast');

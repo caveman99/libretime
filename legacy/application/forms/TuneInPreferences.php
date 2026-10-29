@@ -71,7 +71,7 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
-            $xmlData = curl_exec($ch);
+            curl_exec($ch);
             if (curl_error($ch)) {
                 Logging::error('Failed to reach Router: ' . curl_errno($ch) . ' - ' . curl_error($ch) . ' - ' . curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
                 if (curl_error($ch) == 'The requested URL returned error: 403 Forbidden') {
@@ -82,15 +82,7 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
             curl_close($ch);
 
             if ($valid) {
-/*
-                $xmlObj = new SimpleXMLElement($xmlData);
-                if (!$xmlObj || $xmlObj->head->status != '200') {
-                    $this->getElement('enable_tunein')->setErrors([_('Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again.')]);
-                    $valid = false;
-                } elseif ($xmlObj->head->status == '200') {*/
-                    Application_Model_Preference::setLastTuneinMetadataUpdate(time());
-                    $valid = true;
-           //     }
+                Application_Model_Preference::setLastTuneinMetadataUpdate(time());
             }
         } else {
             $valid = true;
