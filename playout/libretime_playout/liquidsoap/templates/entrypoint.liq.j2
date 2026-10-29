@@ -23,7 +23,19 @@ settings.server.telnet.port.set({{ config.liquidsoap.server_listen_port }})
 
 settings.harbor.bind_addrs.set({{ config.liquidsoap.harbor_listen_address | tojson }})
 
+{% if version >= (2, 2) -%}
 {% if config.liquidsoap.harbor_ssl_certificate -%}
+harbor_transport = http.transport.ssl(
+  certificate={{ config.liquidsoap.harbor_ssl_certificate | quote }},
+  key={{ config.liquidsoap.harbor_ssl_private_key | quote }},
+{%- if config.liquidsoap.harbor_ssl_password %}
+  password={{ config.liquidsoap.harbor_ssl_password | quote }},
+{%- endif %}
+)
+{% else -%}
+harbor_transport = http.transport.unix
+{% endif -%}
+{% elif config.liquidsoap.harbor_ssl_certificate -%}
 settings.harbor.ssl.certificate.set({{ config.liquidsoap.harbor_ssl_certificate | quote }})
 settings.harbor.ssl.private_key.set({{ config.liquidsoap.harbor_ssl_private_key | quote }})
 {% if config.liquidsoap.harbor_ssl_password -%}

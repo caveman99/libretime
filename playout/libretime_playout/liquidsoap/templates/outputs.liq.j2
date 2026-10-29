@@ -31,12 +31,23 @@
 )
 
 {%- elif audio.format == "aac" -%}
+%ifencoder %fdkaac
 %fdkaac(
   bitrate={{ audio.bitrate }},
   aot={{ ("mpeg4_he_aac_v2" if audio.bitrate <= 64 else "mpeg4_aac_lc") | quote }},
   afterburner={{ "false" if audio.bitrate <= 128 else "true" }},
   sbr_mode=true
 )
+%else
+%ffmpeg(
+  format="adts",
+  %audio(
+    codec="aac",
+    b="{{ audio.bitrate }}k",
+    channels={{ 2 if audio.channels == "stereo" else 1 }}
+  )
+)
+%endif
 
 {%- endif -%}
 {%- endmacro -%}
@@ -67,7 +78,8 @@ output.icecast(
   user={{ output.source_user | quote }},
   password={{ output.source_password | quote }},
   fallible = true,
-  icy_metadata = "{{ 'false' if preferences.metadata_router_enabled else 'true' }}",
+{%- set icy = 'false' if preferences.metadata_router_enabled else 'true' %}
+{% if version >= (2, 2) %}  send_icy_metadata = {{ icy }},{% else %}  icy_metadata = "{{ icy }}",{% endif %}
   name={{ (output.name or '') | quote }},
   description={{ (output.description or '') | quote }},
   genre={{ (output.genre or '') | quote }},

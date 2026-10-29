@@ -1,5 +1,5 @@
 from pathlib import Path
-from subprocess import CalledProcessError, check_call, check_output
+from subprocess import check_call
 from unittest import mock
 
 import pytest
@@ -100,7 +100,7 @@ def test_liquidsoap_hooks_before_outputs(
     check_call(["liquidsoap", "--check", str(entrypoint_filepath)])
 
 
-def test_liquidsoap_unsupported_output_aac(
+def test_liquidsoap_output_aac(
     tmp_path: Path,
     stream_preferences: StreamPreferences,
     liq_version,
@@ -132,10 +132,7 @@ def test_liquidsoap_unsupported_output_aac(
         encoding="utf-8",
     )
 
-    with pytest.raises(CalledProcessError) as exception:
-        check_output(["liquidsoap", "--check", str(entrypoint_filepath)])
-
-    assert b"Unsupported format: %fdkaac" in exception.value.stdout
+    check_call(["liquidsoap", "--check", str(entrypoint_filepath)])
 
 
 def test_generate_entrypoint_metadata_router_disables_icy_metadata(

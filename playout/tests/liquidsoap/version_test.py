@@ -26,6 +26,7 @@ def test_parse_liquidsoap_version(version, expected):
 def test_get_liquidsoap_version():
     liquidsoap_version_map = {
         "bookworm": (2, 1, 3),
+        "noble": (2, 2, 4),
     }
 
     try:

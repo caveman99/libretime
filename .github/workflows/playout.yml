@@ -36,3 +36,9 @@ jobs:
     with:
       context: playout
       release: bookworm
+
+  test-noble:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: playout
+      release: noble

@@ -13,7 +13,7 @@ setup_logger("debug")
 def test_liq_conn_version(liq_conn: LiquidsoapConnection, liq_version):
     liq_conn.write("version")
     result = liq_conn.read()
-    assert result == f"Liquidsoap {'.'.join(map(str, liq_version))}"
+    assert result.startswith(f"Liquidsoap {'.'.join(map(str, liq_version))}")
 
 
 def test_liq_conn_allow_reopen(liq_conn: LiquidsoapConnection, liq_version):
@@ -23,7 +23,7 @@ def test_liq_conn_allow_reopen(liq_conn: LiquidsoapConnection, liq_version):
 
         liq_conn.write("version")
         result = liq_conn.read()
-        assert result == f"Liquidsoap {'.'.join(map(str, liq_version))}"
+        assert result.startswith(f"Liquidsoap {'.'.join(map(str, liq_version))}")
 
 
 def test_liq_conn_vars(liq_conn: LiquidsoapConnection, snapshot, liq_version_param):
