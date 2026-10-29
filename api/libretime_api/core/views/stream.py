@@ -21,6 +21,7 @@ class StreamPreferencesView(views.APIView):
                     "message_offline",
                     "replay_gain_enabled",
                     "replay_gain_offset",
+                    "metadata_router_enabled",
                 }
             )
         )

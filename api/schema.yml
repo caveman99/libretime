@@ -7246,12 +7246,16 @@ components:
           type: number
           format: double
           readOnly: true
+        metadata_router_enabled:
+          type: boolean
+          readOnly: true
       required:
         - input_fade_transition
         - message_format
         - message_offline
         - replay_gain_enabled
         - replay_gain_offset
+        - metadata_router_enabled
     StreamState:
       type: object
       properties:

@@ -427,6 +427,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             "message_offline": "",
             "replay_gain_enabled": True,
             "replay_gain_offset": -3.5,
+            "metadata_router_enabled": False,
         },
     )
 

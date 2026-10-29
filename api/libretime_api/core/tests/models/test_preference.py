@@ -18,6 +18,7 @@ def test_preference_get_stream_preferences(db):
         "message_offline": "LibreTime - offline",
         "replay_gain_enabled": True,
         "replay_gain_offset": 0.0,
+        "metadata_router_enabled": False,
     }
 
 

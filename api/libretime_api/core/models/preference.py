@@ -20,6 +20,7 @@ class StreamPreferences(BaseModel):
     message_offline: str
     replay_gain_enabled: bool
     replay_gain_offset: float
+    metadata_router_enabled: bool
 
     # input_auto_switch_off: bool
     # input_auto_switch_on: bool
@@ -85,6 +86,7 @@ class Preference(models.Model):
             message_offline=entries.get("off_air_meta") or "Offline",
             replay_gain_enabled=entries.get("enable_replay_gain") == "1",
             replay_gain_offset=float(entries.get("replay_gain_modifier") or 0.0),
+            metadata_router_enabled=entries.get("tunein_enabled") == "1",
         )
 
     @classmethod
