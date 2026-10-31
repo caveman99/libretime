@@ -28,9 +28,6 @@ def create_source()
     l = fade.out(track_sensitive=true, l)
 
     l = metadata.map(notify_queue,l)
-    l = cross_http(http_input_id="http",l)
-    l = http_fallback(http_input_id="http", http=l, default=l)
-    l = metadata.map(id="map_metadata:schedule", update=false, append_title, l)
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{this_source_id}_skip",
@@ -52,10 +49,13 @@ dynamic_metadata_callback := queue.insert_metadata
 
 output.dummy(fallible=true, queue)
 
-#http = input.http_restart(id="http")
-#output.dummy(fallible=true, http)
+http = input.http_restart(id="http")
+http = cross_http(http_input_id="http",http)
+output.dummy(fallible=true, http)
+stream_queue = http_fallback(http_input_id="http", http=http, default=queue)
+stream_queue = metadata.map(id="map_metadata:schedule", update=false, append_title, stream_queue)
 
-ignore(output.dummy(queue, fallible=true))
+ignore(output.dummy(stream_queue, fallible=true))
 
 def web_stream_set_id(value)
     web_stream_id := value
@@ -136,7 +136,7 @@ end
 s = switch(id="switch:blank+schedule",
             track_sensitive=false,
             transitions=[transition_default, transition],
-            [({!schedule_streaming}, queue), ({true}, default)]
+            [({!schedule_streaming}, stream_queue), ({true}, default)]
     )
 
 s = if input_show_port != 0 and input_show_mount != "" then

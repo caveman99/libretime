@@ -122,41 +122,68 @@ end
 #  - crossing duration should be less than buffer length
 #    (at best, a higher duration will be ineffective)
 
-# HTTP input with "restart" command that waits for "stop" to be effected
-# before "start" command is issued. Optionally it takes a new URL to play,
-# which makes it a convenient replacement for "url".
-# In the future, this may become a core feature of the HTTP input.
-# TODO If we stop and restart quickly several times in a row,
-#   the data bursts accumulate and create buffer overflow.
-#   Flushing the buffer on restart could be a good idea, but
-#   it would also create an interruptions while the buffer is
-#   refilling... on the other hand, this would avoid having to
-#   fade using both cross() and switch().buffer=5.,max=15.,,autostart=false
+# HTTP input controlled by "start", "stop", "restart [url]", "url [url]",
+# "status" and "buffer_length" commands in the given namespace. Every start
+# creates a new input.http and every stop shuts it down, because the stop
+# method of input.http reconnects right away. The buffer decouples the network
+# clock, which cross() requires.
 def input.http_restart(~id,~initial_url="http://dummy/url")
 
-  source = audio_to_stereo( mksafe(input.http(id=id,initial_url)))
+  url = ref(initial_url)
+  current = ref(null())
+  stream = source.dynamic(init=source.fail())
 
-  def stopped()
-    "stopped" == list.hd(server.execute("#{id}.status"), default="")
+  def stop_input()
+    c = !current
+    if null.defined(c) then
+      stream.set(source.fail())
+      null.get(c).shutdown()
+      current := null()
+    end
   end
 
+  def start_input()
+    stop_input()
+    s = input.http(id="#{id}_input", !url)
+    current := s
+    stream.set(s)
+  end
+
+  server.register(namespace=id, "start", fun (_) -> begin start_input() "Done" end)
+  server.register(namespace=id, "stop", fun (_) -> begin stop_input() "Done" end)
+  server.register(namespace=id,
+                  "url",
+                  usage="url [url]",
+                  fun (u) -> begin
+                    if u == "" then
+                      !url
+                    else
+                      url := u
+                      "Done"
+                    end
+                  end)
+  server.register(namespace=id,
+                  "status",
+                  fun (_) -> begin
+                    c = !current
+                    if null.defined(c) then null.get(c).status() else "stopped" end
+                  end)
+  server.register(namespace=id,
+                  "buffer_length",
+                  fun (_) -> begin
+                    c = !current
+                    if null.defined(c) then string(null.get(c).buffer_length()) else "0." end
+                  end)
   server.register(namespace=id,
                   "restart",
                   usage="restart [url]",
-                  fun (url) -> begin
-                    if url != "" then
-                      log(string(server.execute("#{id}.url #{url}")))
-                    end
-                    log(string(server.execute("#{id}.stop")))
-                    add_timeout(0.5,
-                      { if stopped() then
-                          log(string(server.execute("#{id}.start"))) ;
-                          (-1.)
-                        else 0.5 end})
+                  fun (u) -> begin
+                    if u != "" then url := u end
+                    start_input()
                     "Done"
                   end)
 
-  source
+  audio_to_stereo(buffer(buffer=5.,max=15.,stream))
 
 end
 
