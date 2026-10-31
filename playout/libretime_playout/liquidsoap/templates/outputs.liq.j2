@@ -39,12 +39,15 @@
   sbr_mode=true
 )
 %else
+{#- Intensity stereo and PNS in the native ffmpeg encoder cause one-sided peaks #}
 %ffmpeg(
   format="adts",
   %audio(
     codec="aac",
     b="{{ audio.bitrate }}k",
-    channels={{ 2 if audio.channels == "stereo" else 1 }}
+    channels={{ 2 if audio.channels == "stereo" else 1 }},
+    aac_is=0,
+    aac_pns=0
   )
 )
 %endif
