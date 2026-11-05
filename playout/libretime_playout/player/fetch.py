@@ -13,7 +13,7 @@ from libretime_api_client.v2 import ApiClient
 from requests import RequestException
 
 from ..config import CACHE_DIR, POLL_INTERVAL, Config
-from ..liquidsoap.client import LiquidsoapClient
+from ..liquidsoap.client import LiquidsoapClient, LiquidsoapClientError
 from ..liquidsoap.models import Info, MessageFormatKind, StreamPreferences, StreamState
 from .events import Events, FileEvent, FileEvents
 from .liquidsoap import Liquidsoap
@@ -131,6 +131,9 @@ class PypoFetch(Thread):
         logger.debug("state: %s", state)
 
         try:
+            # Liquidsoap may still be starting after a restart of its own, wait
+            # until it accepts connections so the switch states are not lost.
+            self.liquidsoap.liq_client.wait_for_version(timeout=120)
             self.liquidsoap.liq_client.settings_update(
                 station_name=info.station_name,
                 message_format=preferences.message_format,
@@ -151,7 +154,7 @@ class PypoFetch(Thread):
                 streaming=state.schedule_streaming,
             )
 
-        except OSError as exception:
+        except (OSError, LiquidsoapClientError) as exception:
             logger.exception(exception)
 
         self.liquidsoap.clear_queue_tracker()
