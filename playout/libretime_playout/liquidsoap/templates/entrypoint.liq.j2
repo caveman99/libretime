@@ -23,6 +23,10 @@ settings.server.telnet.port.set({{ config.liquidsoap.server_listen_port }})
 
 settings.harbor.bind_addrs.set({{ config.liquidsoap.harbor_listen_address | tojson }})
 
+# TagLib reads the whole file to resolve mp4 metadata, which delays the start of long
+# files by seconds. The other decoders still read the same tags.
+settings.request.metadata_decoders.set(list.filter(fun (d) -> d != "taglib", settings.request.metadata_decoders()))
+
 {% if version >= (2, 2) -%}
 {% if config.liquidsoap.harbor_ssl_certificate -%}
 harbor_transport = http.transport.ssl(

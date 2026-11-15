@@ -22,6 +22,10 @@
   
   settings.harbor.bind_addrs.set(["0.0.0.0"])
   
+  # TagLib reads the whole file to resolve mp4 metadata, which delays the start of long
+  # files by seconds. The other decoders still read the same tags.
+  settings.request.metadata_decoders.set(list.filter(fun (d) -> d != "taglib", settings.request.metadata_decoders()))
+  
   station_name = interactive.string("station_name", "LibreTime")
   
   message_offline = interactive.string("message_offline", "LibreTime - offline")
@@ -58,6 +62,10 @@
   settings.server.telnet.port.set(1234)
   
   settings.harbor.bind_addrs.set(["0.0.0.0"])
+  
+  # TagLib reads the whole file to resolve mp4 metadata, which delays the start of long
+  # files by seconds. The other decoders still read the same tags.
+  settings.request.metadata_decoders.set(list.filter(fun (d) -> d != "taglib", settings.request.metadata_decoders()))
   
   settings.harbor.ssl.certificate.set("/fake/ssl.cert")
   settings.harbor.ssl.private_key.set("/fake/ssl.key")
@@ -98,6 +106,10 @@
   settings.server.telnet.port.set(1234)
   
   settings.harbor.bind_addrs.set(["0.0.0.0"])
+  
+  # TagLib reads the whole file to resolve mp4 metadata, which delays the start of long
+  # files by seconds. The other decoders still read the same tags.
+  settings.request.metadata_decoders.set(list.filter(fun (d) -> d != "taglib", settings.request.metadata_decoders()))
   
   station_name = interactive.string("station_name", "LibreTime")
   
@@ -162,6 +174,10 @@
   
   settings.harbor.bind_addrs.set(["0.0.0.0"])
   
+  # TagLib reads the whole file to resolve mp4 metadata, which delays the start of long
+  # files by seconds. The other decoders still read the same tags.
+  settings.request.metadata_decoders.set(list.filter(fun (d) -> d != "taglib", settings.request.metadata_decoders()))
+  
   station_name = interactive.string("station_name", "LibreTime")
   
   message_offline = interactive.string("message_offline", "LibreTime - offline")
@@ -219,6 +235,10 @@
   settings.server.telnet.port.set(1234)
   
   settings.harbor.bind_addrs.set(["0.0.0.0"])
+  
+  # TagLib reads the whole file to resolve mp4 metadata, which delays the start of long
+  # files by seconds. The other decoders still read the same tags.
+  settings.request.metadata_decoders.set(list.filter(fun (d) -> d != "taglib", settings.request.metadata_decoders()))
   
   station_name = interactive.string("station_name", "LibreTime")
   
@@ -304,6 +324,10 @@
   
   settings.harbor.bind_addrs.set(["0.0.0.0"])
   
+  # TagLib reads the whole file to resolve mp4 metadata, which delays the start of long
+  # files by seconds. The other decoders still read the same tags.
+  settings.request.metadata_decoders.set(list.filter(fun (d) -> d != "taglib", settings.request.metadata_decoders()))
+  
   station_name = interactive.string("station_name", "LibreTime")
   
   message_offline = interactive.string("message_offline", "LibreTime - offline")
@@ -351,6 +375,10 @@
   settings.server.telnet.port.set(1234)
   
   settings.harbor.bind_addrs.set(["0.0.0.0"])
+  
+  # TagLib reads the whole file to resolve mp4 metadata, which delays the start of long
+  # files by seconds. The other decoders still read the same tags.
+  settings.request.metadata_decoders.set(list.filter(fun (d) -> d != "taglib", settings.request.metadata_decoders()))
   
   station_name = interactive.string("station_name", "LibreTime")
   
@@ -400,6 +428,10 @@
   settings.server.telnet.port.set(1234)
   
   settings.harbor.bind_addrs.set(["0.0.0.0"])
+  
+  # TagLib reads the whole file to resolve mp4 metadata, which delays the start of long
+  # files by seconds. The other decoders still read the same tags.
+  settings.request.metadata_decoders.set(list.filter(fun (d) -> d != "taglib", settings.request.metadata_decoders()))
   
   station_name = interactive.string("station_name", "LibreTime")
   
