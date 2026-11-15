@@ -1677,12 +1677,13 @@ SQL;
             $ccShow->setDbAutoPlaylistId($showData['add_show_autoplaylist_id']);
         }
 
-        $ccShow->setDbOverrideIntroPlaylist($showData['add_show_intro_playlist_id'] != 0);
+        // "None/Default" submits an empty string, which PHP 8 treats as != 0
+        $ccShow->setDbOverrideIntroPlaylist(!empty($showData['add_show_intro_playlist_id']));
         if ($showData['add_show_intro_playlist_id'] != '') {
             $ccShow->setDbIntroPlaylistId($showData['add_show_intro_playlist_id']);
         }
 
-        $ccShow->setDbOverrideOutroPlaylist($showData['add_show_outro_playlist_id'] != 0);
+        $ccShow->setDbOverrideOutroPlaylist(!empty($showData['add_show_outro_playlist_id']));
         if ($showData['add_show_outro_playlist_id'] != '') {
             $ccShow->setDbOutroPlaylistId($showData['add_show_outro_playlist_id']);
         }
