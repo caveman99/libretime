@@ -1,6 +1,7 @@
 import logging
 import time
 from datetime import datetime, timedelta
+from threading import Lock
 
 from ..liquidsoap.client import LiquidsoapClient
 from ..utils import seconds_between
@@ -133,6 +134,7 @@ class Liquidsoap:
             2: None,
             3: None,
         }
+        self._queue_lock = Lock()
 
         self.liq_client = liq_client
         self.telnet_liquidsoap = TelnetLiquidsoap(
@@ -161,12 +163,25 @@ class Liquidsoap:
             iter_num += 1
 
         if file_event.file_ready:
-            available_queue = self.find_available_queue()
+            # The queue and fetch threads may both push the same item: reserve the
+            # queue before the push, which can take seconds while liquidsoap resolves
+            # the file, so the other thread sees the item as already queued.
+            with self._queue_lock:
+                if any(
+                    item is not None
+                    and item.row_id == file_event.row_id
+                    and not item.ended()
+                    for item in self.liq_queue_tracker.values()
+                ):
+                    logger.info("Item %s is already queued", file_event.row_id)
+                    return
+                available_queue = self.find_available_queue()
+                self.liq_queue_tracker[available_queue] = file_event
 
             try:
                 self.telnet_liquidsoap.queue_push(available_queue, file_event)
-                self.liq_queue_tracker[available_queue] = file_event
             except Exception as exception:
+                self.liq_queue_tracker[available_queue] = None
                 logger.exception(exception)
                 raise exception
         else:

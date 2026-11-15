@@ -65,3 +65,30 @@ def test_create_liquidsoap_annotation():
 
 def test_liquidsoap():
     Liquidsoap(MagicMock())
+
+
+def test_liquidsoap_push_in_progress_not_duplicated():
+    file_event = FileEvent(
+        type=EventKind.FILE,
+        row_id=1,
+        start=datetime(2022, 9, 5, 11),
+        end=datetime(2099, 9, 5, 11),
+        id=2,
+        show_name="Show 1",
+        fade_in=500.0,
+        fade_out=500.0,
+        cue_in=0.0,
+        cue_out=3600.0,
+        mime="audio/mp4",
+        filesize=10000,
+        file_ready=True,
+    )
+    liquidsoap = Liquidsoap(MagicMock())
+
+    # The other thread pushes the same item while the first push is still running.
+    push = MagicMock(side_effect=lambda *_: liquidsoap.play(file_event))
+    liquidsoap.telnet_liquidsoap.queue_push = push
+    liquidsoap.play(file_event)
+
+    push.assert_called_once()
+    assert list(liquidsoap.liq_queue_tracker.values()).count(file_event) == 1
